@@ -5,6 +5,10 @@ using json = nlohmann::json;
 
 // 随机起点终点，生成mission_random.json，32个机器人
 
+double round2(double val) {
+    return std::round(val * 100.0) / 100.0;
+}
+
 int main() {
     int N = 32;
     double xy_min = -5.0, xy_max = 5.0, theta = 1.0;
@@ -22,17 +26,21 @@ int main() {
     };
 
     for (int i = 0; i < N; ++i) {
+        double sx = round2(dis(gen));
+        double sy = round2(dis(gen));
+        double gx = round2(dis(gen));
+        double gy = round2(dis(gen));
         json agent = {
             {"name", "robot"},
-            {"start", {dis(gen), dis(gen), theta}},
-            {"goal", {dis(gen), dis(gen), theta}},
+            {"start", {sx, sy, theta}},
+            {"goal", {gx, gy, theta}},
             {"radius", radius},
             {"speed", speed}
         };
         mission["agents"].push_back(agent);
     }
 
-    std::ofstream file("mission_random.json");
+    std::ofstream file("Integrated-Design-Practice-C/multi_robot_traj_planner/missions/mission_random.json");
     file << mission.dump(2);
     file.close();
     return 0;
