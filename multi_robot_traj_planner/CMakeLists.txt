@@ -88,3 +88,8 @@ target_link_libraries(prioritized_traj_planner
   ipopt
 )
 
+
+add_executable(demo src/my_demo.cpp)
+target_link_libraries(demo
+  ${catkin_LIBRARIES}
+)
