@@ -50,6 +50,8 @@ catkin_package(
   CATKIN_DEPENDS roscpp roslib message_runtime
 )
 
+add_definitions(-DHAVE_CSTDDEF)
+
 #BUILD
 add_executable(random_map_generator src/random_map_generator.cpp)
 target_link_libraries(random_map_generator
