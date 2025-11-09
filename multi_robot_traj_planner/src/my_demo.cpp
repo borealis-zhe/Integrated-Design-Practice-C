@@ -11,7 +11,7 @@ double round2(double val) {
 }
 
 int main() {
-    int N = 32;
+    int N = 4;
     double xy_min = -5.0, xy_max = 5.0, theta = 1.0;
     double radius = 0.15, speed = 1.0;
 

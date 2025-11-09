@@ -18,7 +18,7 @@
   <arg name="log"                   default="false"/>
 
   <arg name="mission"               default="mission_4agents_15.json"/>
-  <arg name="replay"                default="true"/>
+  <arg name="replay"                default="false"/>
   <arg name="replay_map"            default="mapfile23.bt"/>
   
   <!-- Environment -->

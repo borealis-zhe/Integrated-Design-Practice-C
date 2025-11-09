@@ -134,11 +134,12 @@ int main(int argc, char* argv[]) {
             has_path = true;
 
             // 路径生成后写入文件并计算差分
-            double dt = param.DT; // 或者用 1.0，根据你的实际步长
+            std::string package_path = ros::package::getPath("multi_robot_traj_planner");
+            double dt = DT;
             for(int qi = 0; qi < mission.qn; qi++) {
                 int N = ::N;
                 int step = std::max(1, N / 50);
-                std::ofstream fout("robot" + std::to_string(qi+1) + "_traj.txt");
+                std::ofstream fout(package_path + "robot" + std::to_string(qi+1) + "_traj.txt");
                 fout << "x y vx vy theta\n";
                 for(int i = 0; i < N; i += step) {
                     double x = plan[qi][i][0];
