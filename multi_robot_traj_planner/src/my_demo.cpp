@@ -1,6 +1,7 @@
 #include <random>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <ros/package.h>
 using json = nlohmann::json;
 
 // 随机起点终点，生成mission_random.json，32个机器人
@@ -40,7 +41,11 @@ int main() {
         mission["agents"].push_back(agent);
     }
 
-    std::ofstream file("Integrated-Design-Practice-C/multi_robot_traj_planner/missions/mission_random.json");
+
+    std::string package_path = ros::package::getPath("multi_robot_traj_planner");
+    std::string file_path = package_path + "/missions/mission_random.json";
+
+    std::ofstream file(file_path);
     file << mission.dump(2);
     file.close();
     return 0;
