@@ -17,6 +17,7 @@
 #include <corridor.hpp>
 #include <prioritized_traj_optimization.hpp>
 #include <prioritized_traj_publisher.hpp>
+#include <fstream>
 
 bool has_octomap = false;
 bool has_path = false;
@@ -131,6 +132,43 @@ int main(int argc, char* argv[]) {
 
             start_time = ros::Time::now().toSec();
             has_path = true;
+
+            // 路径生成后写入文件并计算差分
+            double dt = param.DT; // 或者用 1.0，根据你的实际步长
+            for(int qi = 0; qi < mission.qn; qi++) {
+                int N = ::N;
+                int step = std::max(1, N / 50);
+                std::ofstream fout("robot" + std::to_string(qi+1) + "_traj.txt");
+                fout << "x y vx vy theta\n";
+                for(int i = 0; i < N; i += step) {
+                    double x = plan[qi][i][0];
+                    double y = plan[qi][i][1];
+                    double vx = 0, vy = 0, theta = 0;
+                    if (i > 0) {
+                        double x_prev = plan[qi][i-step][0];
+                        double y_prev = plan[qi][i-step][1];
+                        vx = (x - x_prev) / (step * dt);
+                        vy = (y - y_prev) / (step * dt);
+                        theta = atan2(y - y_prev, x - x_prev);
+                    }
+                    fout << x << " " << y << " " << vx << " " << vy << " " << theta << "\n";
+                }
+                // 保证最后一个点输出
+                if (N > 0) {
+                    double x = plan[qi][N-1][0];
+                    double y = plan[qi][N-1][1];
+                    double vx = 0, vy = 0, theta = 0;
+                    if (N-1-step >= 0) {
+                        double x_prev = plan[qi][N-1-step][0];
+                        double y_prev = plan[qi][N-1-step][1];
+                        vx = (x - x_prev) / (step * dt);
+                        vy = (y - y_prev) / (step * dt);
+                        theta = atan2(y - y_prev, x - x_prev);
+                    }
+                    fout << x << " " << y << " " << vx << " " << vy << " " << theta << "\n";
+                }
+                fout.close();
+            }
         }
         if(has_path) {
             // Publish Swarm Trajectory
